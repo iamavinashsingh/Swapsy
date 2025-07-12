@@ -27,10 +27,12 @@ export const AuthProvider = ({ children }) => {
         initializeAuth();
     }, []);
 
-    const login = (userData, token) => {
+    const login = async (userData, token) => {
         setToken(token);
         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        // Immediately set user data from login response
         setCurrentUser(userData);
+        return true;
     };
 
     const logout = () => {

@@ -28,7 +28,7 @@ const UserCard = ({ user }) => {
         </div>
         
         <Link 
-            to={`/profile/${user.id}`} 
+            to={`/profile/${user._id}`} 
             className="text-indigo-600 hover:text-indigo-800 font-medium text-sm"
         >
             View Profile →
