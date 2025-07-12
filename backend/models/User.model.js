@@ -1,14 +1,56 @@
+// models/User.model.js
+
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    skillsOffered: [String],
-    skillsWanted: [String],
-    availability: { type: String },
-    profilePhoto: { type: String },
-    isAdmin: { type: Boolean, default: false },
-}, { timestamps: true });
+const userSchema = new mongoose.Schema(
+    {
+        name: {
+        type: String,
+        required: true,
+        },
+        email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        },
+        password: {
+        type: String,
+        required: true,
+        },
+        profilePic: {
+        type: String,
+        default: '', // optional profile photo URL
+        },
+        location: {
+        type: String,
+        default: '',
+        },
+        skillsOffered: {
+        type: [String],
+        default: [],
+        },
+        skillsWanted: {
+        type: [String],
+        default: [],
+        },
+        availability: {
+        type: String, // e.g. "Weekends", "Evenings"
+        default: '',
+        },
+        isAdmin: {
+        type: Boolean,
+        default: false,
+        },
+        isBanned: {
+        type: Boolean,
+        default: false,
+        },
+    },
+    {
+        timestamps: true,
+    }
+);
 
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+module.exports = User;

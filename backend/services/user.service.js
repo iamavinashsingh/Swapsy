@@ -1,76 +1,61 @@
+// services/user.services.js
+
 const User = require('../models/User.model');
 const bcrypt = require('bcryptjs');
-const generateToken = require('../utils/generateToken');
+const jwt = require('jsonwebtoken');
 
-exports.registerUser = async ({ name, email, password }) => {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) throw new Error('User already exists');
+const registerService = async ({ name, email, password }) => {
+  const userExists = await User.findOne({ email });
+  if (userExists) throw new Error('User already exists');
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
-        name,
-        email,
-        password: hashedPassword,
-    });
+  const user = await User.create({ name, email, password: hashedPassword });
 
-    return {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        token: generateToken(user._id),
-    };
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: '1d',
+  });
+
+  return { user, token };
 };
 
-exports.loginUser = async ({ email, password }) => {
-    const user = await User.findOne({ email });
-    if (!user) throw new Error('User not found');
+const loginService = async ({ email, password }) => {
+  const user = await User.findOne({ email });
+  if (!user) throw new Error('Invalid credentials');
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new Error('Invalid credentials');
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) throw new Error('Invalid credentials');
 
-    return {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        token: generateToken(user._id),
-    };
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: '1d',
+  });
+
+  return { user, token };
 };
 
-exports.getUserProfile = async (userId) => {
-    const user = await User.findById(userId).select('-password');
-    if (!user) throw new Error('User not found');
-    return user;
+const getUserById = async (userId) => {
+  const user = await User.findById(userId).select('-password');
+  return user;
 };
 
-// UPDATE User Profile
-exports.updateUserProfile = async (userId, body) => {
-    const user = await User.findById(userId);
-    if (!user) throw new Error('User not found');
+const updateUserProfileService = async (userId, updateData) => {
+  const user = await User.findById(userId);
+  if (!user) throw new Error('User not found');
 
-    user.name = body.name || user.name;
-    user.skillsOffered = body.skillsOffered || user.skillsOffered;
-    user.skillsWanted = body.skillsWanted || user.skillsWanted;
-    user.availability = body.availability || user.availability;
-    user.profilePhoto = body.profilePhoto || user.profilePhoto;
+  Object.assign(user, updateData);
+  await user.save();
+  return user;
+};
 
-    // ✅ Secure password update (if user wants)
-    if (body.password) {
-        const bcrypt = require('bcryptjs');
-        user.password = await bcrypt.hash(body.password, 10);
-    }
+const getAllUsersService = async () => {
+  const users = await User.find().select('-password');
+  return users;
+};
 
-    //  DO NOT allow changing email or isAdmin
-    const updatedUser = await user.save();
-
-    return {
-        _id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email, // email stays same
-        skillsOffered: updatedUser.skillsOffered,
-        skillsWanted: updatedUser.skillsWanted,
-        availability: updatedUser.availability,
-        profilePhoto: updatedUser.profilePhoto,
-        token: generateToken(updatedUser._id),
-    };
+module.exports = {
+  registerService,
+  loginService,
+  getUserById,
+  updateUserProfileService,
+  getAllUsersService,
 };

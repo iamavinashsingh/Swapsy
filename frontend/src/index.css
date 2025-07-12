@@ -2,19 +2,22 @@
 
 
 /*  Global design tokens using @theme */
-@theme {
+@theme{
   /* Colors */
   --color-primary: #FD9132;
   --color-secondary: #3BC6A9;
   --color-tertiary: #20A1E7;
-  --gradient-bg: linear-gradient(
-    45deg,
-    rgba(7, 27, 43) 16%,
-    rgba(23, 87, 65) 100%,
-    rgba(87, 51, 20) 100%
-  );
+  --color-accent: #FCBD1B;
+  --gradient-bg: linear-gradient(90deg,rgba(16, 18, 18, 1) 0%, rgba(13, 23, 13, 1) 51%, rgba(18, 16, 0, 1) 100%);
   --color-text: #FEBD1B;
-
+  --box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
+                rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, 
+                rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, 
+                rgba(0, 0, 0, 0.06) 0px 2px 1px, 
+                rgba(0, 0, 0, 0.09) 0px 4px 2px, 
+                rgba(0, 0, 0, 0.09) 0px 8px 4px, 
+                rgba(0, 0, 0, 0.09) 0px 16px 8px, 
+                rgba(0, 0, 0, 0.09) 0px 32px 16px;
   /* Typography */
   --font-sans: "Poppins", sans-serif;
 
@@ -23,23 +26,28 @@
   --shadow-soft: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/*  Base styles */
-@layer base {
-  html {
-    font-family: var(--font-sans);
-    background: var(--gradient-bg);
-    min-height: 100%;
-  }
 
-  body {
-    background: var(--gradient-bg); /* Just to be safe */
-    min-height: 100vh;
+@layer components {
+  .bg-swapsy {
+    background: var(--gradient-bg);
+  }
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+  .bg-secondary {
+    background-color: var(--color-secondary); 
+  }
+  .bg-tertiary {
+    background-color: var(--color-tertiary);
+  }
+  .shadow-btn{
+    box-shadow: var(--box-shadow);
+  }
+  .bg-card{
+    background: linear-gradient(90deg,rgba(30, 75, 94, 1) 0%, rgba(6, 13, 8, 1) 100%, rgba(23, 21, 10, 1) 17%);
   }
 }
 
-/*  Optional custom component styles */
-@layer components {
-  .btn-primary {
-    @apply bg-[var(--color-primary)] text-white px-4 py-2 rounded-[var(--radius-xl)] shadow-soft hover:bg-[var(--color-primary-hover)];
-  }
+@layer buttons{
+
 }
