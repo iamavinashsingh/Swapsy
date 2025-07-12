@@ -1,11 +1,13 @@
-import React from 'react'
+import Navbar from './components/Navbar';
+import AppRoutes from './routes/AppRoutes';
 
-const App = () => {
+function App() {
   return (
-    <div className='bg-gray-900 min-h-screen'>
-      <h1 className='text-red-500 text-4xl'>Hello Swapsy</h1>
-    </div>
-  )
+    <>
+      <Navbar />
+      <AppRoutes />
+    </>
+  );
 }
 
-export default App
+export default App;

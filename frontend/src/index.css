@@ -1,1 +1,45 @@
 @import "tailwindcss";
+
+
+/*  Global design tokens using @theme */
+@theme {
+  /* Colors */
+  --color-primary: #FD9132;
+  --color-secondary: #3BC6A9;
+  --color-tertiary: #20A1E7;
+  --gradient-bg: linear-gradient(
+    45deg,
+    rgba(7, 27, 43) 16%,
+    rgba(23, 87, 65) 100%,
+    rgba(87, 51, 20) 100%
+  );
+  --color-text: #FEBD1B;
+
+  /* Typography */
+  --font-sans: "Poppins", sans-serif;
+
+  /* Radii & shadows */
+  --radius-xl: 1rem;
+  --shadow-soft: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/*  Base styles */
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background: var(--gradient-bg);
+    min-height: 100%;
+  }
+
+  body {
+    background: var(--gradient-bg); /* Just to be safe */
+    min-height: 100vh;
+  }
+}
+
+/*  Optional custom component styles */
+@layer components {
+  .btn-primary {
+    @apply bg-[var(--color-primary)] text-white px-4 py-2 rounded-[var(--radius-xl)] shadow-soft hover:bg-[var(--color-primary-hover)];
+  }
+}
