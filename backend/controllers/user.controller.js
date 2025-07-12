@@ -20,9 +20,18 @@ exports.loginUser = async (req, res) => {
 
 exports.getUserProfile = async (req, res) => {
     try {
-        const userData = await userService.getUserProfile(req.user.id);
-        res.status(200).json(userData);
-    } catch (error) {
-        res.status(404).json({ message: error.message });
+        const user = await userService.getUserProfile(req.user.id);
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+exports.updateUserProfile = async (req, res) => {
+    try {
+        const updatedUser = await userService.updateUserProfile(req.user.id, req.body);
+        res.json(updatedUser);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 };
